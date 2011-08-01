@@ -1,0 +1,332 @@
+/*
+ * Design for pmworks-corp.com by Pasion Mura
+ * 201005092113CEST - CC-BY-SA
+*/
+
+/*@font-face {font-family:MPR; src: local("Myriad Pro"), url("mpr.otf");}
+@font-face {font-family:MPL; src: local("Myriad Pro Light"), url("mpl.otf");}
+@font-face {font-family:MPB; src: local("Myriad Pro Bold"), url("mpb.otf");}*/
+
+.highlight() {
+		font-family: MPR,"Myriad Pro",Arial,Helvetica,sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 1.1em;
+}
+
+.normal() {
+		font-family: MPR,"Myriad Pro",Arial,Helvetica,sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.1em;
+}
+
+.normal-bold() {
+		font-family: MPB,"Myriad Pro",Arial,Helvetica,sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.1em;
+}
+
+.node-foreign-small(){
+	font-size:13px;
+}
+
+.transition(@property) {
+	transition: @property 0.3s ease;
+	-webkit-transition: @property 0.3s ease;
+	-moz-transition: @property 0.3s ease;
+	-o-transition: @property 0.3s ease;
+}
+
+.description-width() {
+	width:535px;
+}
+
+.link-normal(){color:#5782C2;}
+.link-black(){color:#333;}
+
+//#search .submit, footer ul.fto {background:url("../images/pmworks-research-assets.png") no-repeat;}
+
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
+pre, form, fieldset, table, th, td {margin:0;padding:0;list-style:none;} a, input[type="submit"] {cursor:pointer;} a img {border:none;} a {color:#5782C2;text-decoration:none;} a:hover {text-decoration:underline;}
+nav, section, article, aside, header, footer {display:block;}
+body {background-repeat:repeat-x;color:#333;padding:3em;
+		 font-family:Arial, Myriad Pro, sans-serif;font-size:16px;font-size-adjust:none;font-style:normal;font-variant:normal;font-weight:normal;line-height:1.1em;}
+
+// Other Resetters
+// ---------------
+svg.tohide {position:absolute;left:-1000px;}
+// Layout
+// ------
+*::-moz-selection {background-color:#333;color:#F6F5E4;}
+*::selection {background-color:#333;color:#F6F5E4;}
+body.home header {display:none;}
+/*
+body.home header {
+	.transition(all);
+	left:34%;
+	opacity:1;
+	position:absolute;
+	top:0;
+	width:200px;
+}*/
+#wrapper:hover section.identity {-ms-filter:blur(add = 0, direction = 300, strength = 10);filter:url(blur.svg#blur);}
+
+// Node is detail
+// --------------
+.depth .identity {
+	opacity:0.3;
+	font-family:Arial, Myriad Pro, sans-serif;
+	.transition(all);
+
+	&:first-child {
+		margin-top:0;
+		position:relative;
+		overflow:visible;
+		height:25px;
+		h1 {}
+		.description {left: -36px;position: absolute;top: -20px;.node-foreign-small;}
+	}
+	
+	&:last-child {
+		position:relative;
+		overflow:visible;
+		height:25px;
+
+		h1 {}
+		.description {.node-foreign-small;bottom: -16px;left: -40px;position: absolute;}
+	}
+
+	&:hover,
+	&:active {opacity:1;}
+}
+
+// Nodes is root
+// -------------
+body.home .identity {
+	
+}
+
+section.identity {
+	// Normal state
+	// ------------
+	clear:both;margin-top:4em;overflow:hidden;min-width:945px;
+	.transition(all);
+
+	h1 {
+		span {display:none;}
+	}
+
+	img, .description {font-family:MPR, "Myriad Pro", Arial, Helvetica, sans-serif;font-weight:normal;}
+
+	.description {
+		cursor:pointer;margin-left:3em;width:535px;
+
+		h2 {
+			margin-top:1em;
+			.normal-bold;
+		}
+		p {
+			margin:1em 0 1em;
+			.normal;
+		}
+		strong {font-family:MPR, "Myriad Pro", Arial, Helvetica, sans-serif;font-weight:bold;}
+	}
+
+	nav {
+		float: right !important;font-size: 12px;margin-left:3em;text-transform:lowercase;max-width:140px;display:none;
+
+		ul {
+			margin-top:0.5em;
+			&:first-child {margin-top:0;}
+
+			li {
+				display:inline;margin-left:1em;
+				span {display:none;}
+				&.head{
+					display:block;font-weight:bold;margin-left:0;
+					a {color:#333; font-weight:bold;}
+				}
+				ul {}
+			}
+		}
+	}
+
+	article {
+		.fma,
+		.asides {display:none;.transition(all);}
+	}
+
+	&:hover nav,
+	&:active nav {
+		display:block;
+	}
+
+	// Hover for section.identity:general
+	&:hover {}
+	&[data-node="a:0"]{margin-top:0;}
+	&[data-node="a"] {font-size:20px;margin-left:3em;}
+
+	h1, .description, nav {float:left;}
+
+	// Focus
+	// -----
+	&:hover,
+	&:active,
+	&.focus {
+		filter:none !important;
+		article {
+			float:left;
+			.description-width;
+
+			.fma{
+				clear:left;display:block;background:/*#EFEBDE*/#000;height:200px;margin-left: 3em;width: 535px;
+				position:relative;
+
+				img {
+					.transition(all);
+					position:absolute;
+					top:0;
+					left:0;
+
+					&:nth-of-type(1) {}
+					&:nth-of-type(2) {opacity:0;}
+				}
+				&:hover,
+				&:active,
+				&.selected {
+					img {
+						&:nth-of-type(1) {opacity:0;}
+						&:nth-of-type(2) {opacity:1;}
+					}
+				}
+			}
+
+			.asides {
+				display:block;
+		  	border-top: 5px solid #EFEBDE;
+		    color: #333333;
+		    padding-top: 9px;
+				overflow:hidden;
+				clear:both;
+				margin-left:3em;
+				margin-top:1em;
+				.description-width;
+
+				aside {
+		    	// text-shadow: 1px 1px 0 #FFFFFF;
+					display: block;
+			    float: left;
+			    height: 100px;
+			    width: 257px;
+			    overflow:hidden;
+
+			    &:first-of-type {margin-right:1em;}
+			    &:last-of-type {margin-left:0;}
+
+			    h2, ul li {.normal;}
+			    h2 {.normal-bold;margin-bottom:0.5em;text-shadow: 1px 1px 0 #FFFFFF;}
+			    ul {
+			    	li {
+			    		a {
+			    			&:before {content:"〉 ";font-size:10px;color:#999;}
+				    		.node-foreign-small;display:block;
+			    		}
+			    	}
+			    }
+		  	}
+			}
+		}
+		nav {
+			li {
+				a {
+					overflow:auto;
+					img {padding-top:1px;}
+				}
+			}
+		}
+	}
+
+	// Active
+	// ------
+
+	&.active {
+		filter:none !important;
+		margin-left:3em;
+		overflow:visible;
+		opacity:1;
+		position:relative;
+
+		header {
+			position:relative;
+			nav {
+				display: block;
+		    float: none;
+		    left: 147px;
+		    position: absolute;
+		    bottom: 70px;
+				ul {
+					display:block;
+					width:600px;
+					li {
+						display:none;
+						color:#333;
+						a {}
+						img {display:none;}
+						span {display:inline;}
+						&.head {
+							display:inline;font-weight:bold;
+							a {color:#333;}
+						}
+					}
+					&:last-child {
+						li {display:inline;&.current{a{.link-black;}}}
+					}
+				}
+			}
+		}
+
+		article {
+			left: 173px;
+			position: absolute;
+			top:10px;
+			text-align:justify;
+			text-justify:distribute;
+
+			.description {
+				cursor:auto;
+				p {
+					margin:0.2em 0 1em;
+					.normal;
+				}
+				p:first-child {
+					.highlight;
+				}
+			}
+		}
+	}
+
+}
+
+em {font-style:italic;}
+
+.lighter {opacity:.5;}
+.smaller {font-size:80%;}
+
+// Dynamic js class manipulations
+// ------------------------------
+.blur {
+	filter: url(blur.svg#blur);
+}
+// Node gradations
+// ---------------
+// Dynamic generation of gradient values per node via server-side script
+
+// nav ul li, reverse dynamic alpha by node proximity to (li.current|li:last-child)
+header nav {
+	ul:nth-last-child(2){opacity:0.7;}
+	ul:nth-last-child(3){opacity:0.5;}
+	ul:nth-last-child(4){opacity:0.3;}
+	ul:nth-last-child(5){opacity:0.3;}
+}

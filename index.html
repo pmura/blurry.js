@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content="en" http-equiv="content-language"/>
+    <title>pmworks - Always the Next Step</title>
+    <meta content="" name="description"/>
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="css/blur.php" type="text/css" rel="stylesheet" media="screen">
+    <!--<script src="scripts/less.js" type="text/javascript"></script>-->
+    <script src="scripts/jshashtable.js"></script>
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/jquery.waitforimages.js"></script>
+    <!--<script src="scripts/raphael.js"></script>
+    <script src="scripts/morpheus.js"></script>-->
+    <script src="scripts/_stackblur.js"></script>
+<script type="text/coffeescript" src="scripts/blur.coffee"></script>
+<!-- <script type="text/coffeescript" src="scripts/arr.coffee"></script> -->
+<script src="scripts/coffee-script.js"></script>
+    <!--<script src="scripts/blur.js"></script>-->
+    <!--<script src="scripts/svgweb/svg.js" data-path="media/data/svg"></script>-->
+    <script src="scripts/cufon-yui.js" type="text/javascript"></script>
+    <script src="scripts/fonts/MPR-full.font.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        Cufon.replace('.identity .description', 'MPR');
+        Cufon.replace('#cufoned', 'MPR');
+
+// $(document).ready(function(){
+//     $('body').waitForImages(function(){
+//         this.blurFx = new Blurry({
+//             el: $('section.identity').find('h1 img')
+//         });
+//         console.log(this.blurFx);
+//     });
+// });
+    </script>
+
+</head>
+<body class="home">
+<style>
+    .blur {filter:url(css/blur.svg#blur);}
+</style>
+
+    <div id="wrapper">
+        
+        
+        <section class="identity" data-identity="pmwcc" data-node="a:0">
+            <h1><img id="creative" src="images/pmworks-creative-node.png" alt="" /><span>pmworks research</span></h1>
+        	<div class="description">
+                Sample <strong>descriptive</strong> text <strong>replaced with cufon canvas</strong>, so that we can blur it. <em>This for cross-<span class="lighter">browser</span> compatibility.</em>
+            </div>
+        </section>
+        
+        
+        <section class="identity" data-identity="pmwc" data-node="a">
+            <h1><img src="images/pmworks-corporation-node.png" alt="" /><span>pmworks research</span></h1>
+            <article>
+            	<div class="description">
+                    This is part of the new design used for the <strong>pmworks</strong> website, which will be visible at <strong><a href="http://www.pmworks-corp.com">pmworks</a></strong>.
+                    <p class="smaller">We're testing here also links. They should work as expected.</p>
+                    <!--<p>We are the incubator of those technologies.</p>-->
+                </div>
+                <div class="fma">
+                    <a href="">
+                        <img src="fma/dnxu-change-state1.jpg" />
+                        <img src="fma/dnxu-change-state2.jpg" />
+                    </a>
+                </div>
+
+                <div class="asides">
+                    <aside>
+                        <h2>Latest publications</h2>
+                        <ul>
+                            <li><a href="">A Graph-Based Approach For Extracting...</a></li>
+                            <li><a href="">Kusev: The UI for complex systems</a></li>
+                            <li><a href="">HTML5 and SVG filters: Applying cross-browser...</a></li>
+                        <ul>
+                    </aside>
+                    <aside>
+                        <h2>Latest posts</h2>
+                        <ul>
+                            <li><a href="">A Graph-Based Approach For Extracting...</a></li>
+                            <li><a href="">Kusev: The UI for complex systems</a></li>
+                            <li><a href="">HTML5 and SVG filters: Applying cross-browser...</a></li>
+                        <ul>
+                    </aside>
+                </div>
+            </article>
+
+            <nav>
+                <ul>
+                    <li class="head"><a href="">Company</a></li>
+                    <li><a href="">About</a></li>
+                    <li><a href="">Careers</a></li>
+                    <li><a href="">Blog</a></li>
+                    <li><a href="">Contact</a></li>
+                </ul>
+                <ul>
+                    <li class="head"><a href="">Products</a></li>
+                    <li><a href=""><img src="images/ptizo.png" alt="" /><span>Ptizo</span></a></li>
+                </ul>
+            </nav>
+        </section>
+        
+        <section class="identity" data-identity="pmwr" data-node="a:1">
+            <h1><img src="images/pmworks-research-node.png" alt="" /><span>pmworks research</span></h1>
+        	<div class="description">
+                We are trying this effect on transparent and opaque <em>images</em>, though this shouldn't be a problem.
+            </div>
+        </section>
+        
+    </div>
+
+</body>
+</html>
