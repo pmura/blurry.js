@@ -4,7 +4,6 @@
 # root.pmwc =
 # 	debug: ()->
 # 		console.log arguments
-
 class @Blurry
 	# 
 	constructor: (options={})->
@@ -51,12 +50,13 @@ class @Blurry
 				do (sharpHash, sharpData)=>
 					imgtmp = new Image()
 					imgtmp.src = sharpData
-					console.log iteB
+					# console.log iteB
 					# Should delay enough to permit imgtmp.src to render, so we can get data
 					# 2ms should be enough
 					# imgtmp.onload = this.blurry this, imgtmp, {sharpHash:sharpHash, sharpData:sharpData}
 					onloadInterval = setTimeout ()=>
-						return this.blurry this, imgtmp, {sharpHash:sharpHash, sharpData:sharpData}
+						return this.blurry this, imgtmp,
+							{sharpHash:sharpHash, sharpData:sharpData}
 					, 2
 					iteBArr.push iteB
 					iteB++
@@ -96,25 +96,22 @@ class @Blurry
 	# TODO: clear fn from unneccessary anonymous fn
 	blurry: (_this, imgtmp, sharpObj)->
 		imgtmp.onload = =>
-			# console.log this, _self
-			cvstmp = new _this._Canvas()
-			cvsctx = cvstmp.getContext '2d'
-			cvstmp.height = imgtmp.naturalHeight
-			cvstmp.width = imgtmp.naturalWidth
-			cvsctx.clearRect 0, 0, cvstmp.width, cvstmp.height
-			cvsctx.drawImage imgtmp, 0, 0
-			# cvsctx.save
-			cvs = new StackBlur.canvasRGBA cvstmp, 0, 0, cvstmp.width, cvstmp.height, 3
-			_this.blurryEl[sharpObj.sharpHash] = cvs.toDataURL()
-			console.log sharpObj.sharpData is _this.blurryEl[sharpObj.sharpHash]
+		
+		console.log _this.options.radius
+		cvstmp = new _this._Canvas()
+		cvsctx = cvstmp.getContext '2d'
+		cvstmp.height = imgtmp.naturalHeight
+		cvstmp.width = imgtmp.naturalWidth
+		cvsctx.clearRect 0, 0, cvstmp.width, cvstmp.height
+		cvsctx.drawImage imgtmp, 0, 0
+		# cvsctx.save
+		cvs = new StackBlur.canvasRGBA cvstmp, 0, 0,
+			cvstmp.width, cvstmp.height, _this.options.radius
+		_this.blurryEl[sharpObj.sharpHash] = cvs.toDataURL()
+		console.log sharpObj.sharpHash + ' '+ (sharpObj.sharpData is _this.blurryEl[sharpObj.sharpHash])
 
 		# console.log 'W'+imgtmp.width, 'H'+imgtmp.height
 		# console.log cvstmp.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight) is _cvs.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight)
-
-		# )(imgtmp, _this, {sharpHash: sharpObj.sharpHash, sharpData: sharpObj.sharpData})
-		# return 
-	waitForImageLoad: (cvs, img)->
-	# 	cvs.drawImage
 	imgToCanvas : (image)->
 		cvs = document.createElement('canvas')
 		cvs.height = el.naturalHeight
@@ -205,6 +202,7 @@ $ ->
 		window.blurFx = new Blurry {
 			# el: $('section.identity').find('h1 img')
 			el: $('canvas')
+			radius: 3
 		}
 		console.log blurFx, blurFx.options.el.length
 		# for hash in blurFx.usedHashes
