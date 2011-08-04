@@ -133,31 +133,31 @@ class @Blurry
 			if 	replaceWithImage
 				$el.replaceWith(imgtmp)
 			return imgtmp
-
+  ###
+  ###
+  dataToCanvas: (data)->
+		imgtmp = new Image
+		imgtmp.src = data
+		imgtmp.onload = =>
+			canvas = new @_Canvas()
+			canvas.height = imgtmp.naturalHeight
+			canvas.width = imgtmp.naturalWidth
+			cvsctx.clearRect 0, 0, canvas.width, canvas.height
+			cvsctx.drawImage imgtmp, 0, 0
+			return canvas
 	###
-	@deprecated Superseded by Blurry::constructor.imgtmp.onload
 	###
-	blurry: (_this, imgtmp, sharpObj, iteBlurry, iteBlurryList, iteSharpList)->
-		imgtmp.onload = ->
-		cvstmp = new _this._Canvas()
-		cvsctx = cvstmp.getContext '2d'
-		cvstmp.height = imgtmp.naturalHeight
-		cvstmp.width = imgtmp.naturalWidth
-		cvsctx.clearRect 0, 0, cvstmp.width, cvstmp.height
-		cvsctx.drawImage imgtmp, 0, 0
-		cvs = new StackBlur.canvasRGBA cvstmp, 0, 0,
-			cvstmp.width, cvstmp.height, _this.options.radius
-		_this.blurryEl[sharpObj.sharpHash] = cvs.toDataURL()
-		console.log sharpObj.sharpHash + ' '+ (sharpObj.sharpData is _this.blurryEl[sharpObj.sharpHash])
+	canvasDataReplacement: (canvas, data)->
+		imgtmp = new Image
+		imgtmp.src = data
+		imgtmp.onload = =>
+			canvas.height = imgtmp.naturalHeight
+			canvas.width = imgtmp.naturalWidth
+			cvsctx = canvas.getContext('2d')
+			cvsctx.clearRect 0, 0, canvas.width, canvas.height
+			cvsctx.drawImage imgtmp, 0, 0
+			return canvas
 
-		if iteBlurry is _this.iteSharpList.length-1
-			return _this.options.onComplete(_this)
-
-		iteBlurryList.push iteBlurry
-		iteBlurry++
-
-		# console.log 'W'+imgtmp.width, 'H'+imgtmp.height
-		# console.log cvstmp.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight) is _cvs.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight)
 	imgToCanvas : (image)->
 		cvs = document.createElement('canvas')
 		cvs.height = el.naturalHeight
@@ -166,6 +166,7 @@ class @Blurry
 		ctx.clearRect(0, 0, cvs.width, cvs.height)
 		ctx.drawImage el, 0, 0
 		ctx.save
+		return cvs
 		# $el.replaceWith(cvs)
 
 	###
@@ -187,10 +188,16 @@ class @Blurry
 
 				else if @_type(el) is 'Canvas'
 					console.log 'not ready for canvas'
-					$(el.parentNode).bind 'mouseover', {_this:this,el:el}, (e)->
-						elImg = e.data._this.imagify(false, el)()
-						el.getContext('2d').drawImage elImg, 0, 0
-
+					$(el.parentNode).bind 'mouseover', {_this:this,el:el,parent:el.parentNode}, (e)->
+						$parent = $(e.data.parent).find(e.data.el.tagName.toLowerCase())
+						for el in $parent
+							a = e.data._this.canvasDataReplacement el, e.data._this.blurryEl[el.dataset.blurryId]
+							a()
+					$(el.parentNode).bind 'mouseout', {_this:this,el:el,parent:el.parentNode}, (e)->
+						$parent = $(e.data.parent).find(e.data.el.tagName.toLowerCase())
+						for el in $parent
+							a = e.data._this.canvasDataReplacement el, e.data._this.sharpEl[el.dataset.blurryId]
+							a()
 					# $(el).bind 'mousemove', {_this:this,el:el}, @_mouseover
 					# $(el).bind 'mousemove', {_this:this,el:el}, (event)->
 					# 	$(el).trigger 'active'
@@ -284,6 +291,7 @@ $ ->
 	$('body').waitForImages ()=>
 		blurFx = new Blurry {
 			replaceWithCanvas: true
+			parent: $('section.identity')
 			el: $('section.identity').find('h1 img')
 			# el: $('canvas')
 			radius: 3
