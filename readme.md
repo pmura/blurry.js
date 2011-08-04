@@ -1,4 +1,4 @@
-Blurry.js it's an experimental javascript library (written in [CoffeScript](http://jashkenas.github.com/coffee-script/)) for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), a slighty modified version of the [StackBlur](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html)) library for canvas gaussian blur, jQuery and jQuery.waitForImages.
+**(Blurry.js)[http://www.pmura.com/labs/blurryjs]** it's an experimental javascript library (written in [CoffeScript](http://jashkenas.github.com/coffee-script/)) for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), a slighty modified version of the [StackBlur](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html) library for canvas gaussian blur, jQuery and jQuery.waitForImages.
 
 It is amasingly fast though we want to test it with web workers on bigger images.
 
