@@ -1,4 +1,4 @@
-Blurry.js it's an experimental javascript library (written in [CoffeScript](http://jashkenas.github.com/coffee-script/)) for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), a slighty modified version of the StackBlur library for canvas blur, jQuery and jQuery.waitForImages.
+Blurry.js it's an experimental javascript library (written in [CoffeScript](http://jashkenas.github.com/coffee-script/)) for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), a slighty modified version of the [StackBlur](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html)) library for canvas gaussian blur, jQuery and jQuery.waitForImages.
 
 It is amasingly fast though we want to test it with web workers on bigger images.
 
@@ -13,6 +13,7 @@ How it works
 1. Get all canvases and apply a unique id under \<\canvas data-blurry-id="ID" \/>
 2. For each canvas store hash
         {Blurry.sharpEl.ID = data/png}
+
         {Blurry.blurryEl.ID = data/png}
 
 Browser Support
@@ -48,3 +49,7 @@ In CoffeeScript
           onComplete: (_this)->
             console.log 'complete'
         }
+
+Next
+====
+Implement <code>Blurry::blurAllExcept</code>, and <code>Blurry::sharpAllExcept</code> so that it fully simulates the on hover CSS3 blur.

@@ -4,7 +4,6 @@
 # root.pmwc =
 # 	debug: ()->
 # 		console.log arguments
-
 class @Blurry
 	# 
 	constructor: (options={})->
@@ -18,7 +17,10 @@ class @Blurry
 		# Multidim assoc-array of blurred data, by data-blurry-id:hash
 		this.blurryEl = {}
 		# Object.prototype.toString.call(el) === '[object HTMLCanvasElement]'
-		ite = 0
+		@iteSharp = 0
+		@iteSharpList = []
+		@iteBlurry = 0
+		@iteBlurryList = []
 		for el in this.options.el
 			#this.originalCanvas.push el 
 			$el = $(el)
@@ -28,25 +30,57 @@ class @Blurry
 				el.setAttribute('data-blurry-id', hash)
 				if this._type(el) is 'Canvas'
 					this.sharpEl[hash] = el.toDataURL()
+					@iteSharpList.push @iteSharp
+					@iteSharp++
 				if this._type(el) is 'Image'
 					# Currently there is a problem calculating H and W
 					# I believe the problem is with the calculation done before img draws
 					# 99.99% of cases should appear if CTRL+F5 (why moved to this.cavasify)
 					# edit: This should be fixed by now: waitForImages before calling Blurry
 					if el.naturalHeight isnt 0 or el.naturalWidth isnt 0
-						canvas =  this.canvasify $el, el, el.naturalWidth, el.naturalHeight
+						canvas =  this.canvasify @options.replaceWithCanvas, @iteSharp, $el, el, el.naturalWidth, el.naturalHeight
 						this.sharpEl[hash] = canvas.toDataURL()
-		
+						@iteSharpList.push @iteSharp
+						@iteSharp++
+		# console.log @iteSharpList
+
 		totalSharpEl = this._size(this.sharpEl)
 		if totalSharpEl >= 1
 			for sharpHash, sharpData of this.sharpEl
 				do (sharpHash, sharpData)=>
 					imgtmp = new Image()
 					imgtmp.src = sharpData
+					# console.log iteBlurry
 					# Should delay enough to permit imgtmp.src to render, so we can get data
 					# 2ms should be enough
-					imgtmp.onload = setTimeout (this.blurry this, imgtmp, {sharpHash:sharpHash, sharpData:sharpData}), 5
-					ite++
+					# imgtmp.onload = this.blurry this, imgtmp, {sharpHash:sharpHash, sharpData:sharpData}, iteBlurry, @iteSharpList
+					# onloadInterval = setTimeout ()=>
+					# 	this.blurry this, imgtmp,
+					# 		{sharpHash:sharpHash, sharpData:sharpData}, @iteBlurry, @iteBlurryList, @iteSharpList
+					# , 2
+					imgtmp.onload = =>
+						cvstmp = new @_Canvas()
+						cvsctx = cvstmp.getContext '2d'
+						# naturalWidth/Height is HTML5 only, but since this lib uses canvas...
+						cvstmp.height = imgtmp.naturalHeight
+						cvstmp.width = imgtmp.naturalWidth
+						cvsctx.clearRect 0, 0, cvstmp.width, cvstmp.height
+						cvsctx.drawImage imgtmp, 0, 0
+						cvs = new StackBlur.canvasRGBA cvstmp, 0, 0,
+							cvstmp.width, cvstmp.height, @options.radius
+						# We have to call toDataURL anyway, even if sharp === blurry
+						@blurryEl[sharpHash] = cvs.toDataURL()
+
+						# Test and log if data (sharp and blurry) is the same
+						console.log sharpHash + ' '+ (sharpData is @blurryEl[sharpHash])
+
+						if @iteBlurry is @iteSharpList.length-1
+							@iteBlurryList.push @iteBlurry
+							@iteBlurry++
+							return @options.onComplete(this)
+						
+						@iteBlurryList.push @iteBlurry
+						@iteBlurry++
 		
 		@events()
 		return this
@@ -55,49 +89,74 @@ class @Blurry
 	Element manipulation funs
 	-------------------------
 	###
-	canvasify: ($el, el, w, h)->
+
+	###
+	@param replaceWithCanvas querySelector
+	@param indexInOptions querySelector
+	@param $el querySelector
+	@param el querySelector
+	@param w int
+	@param h int
+	@return HTMLImageElement
+	###
+	canvasify: (replaceWithCanvas, indexInOptions, $el, el, w, h)->
 		# console.debug 'aW:onElCalcW aH:onElCalcH'
 		# console.debug 'o_' + w + ':' + 'c_' + el.naturalWidth, h + ':' + el.naturalHeight
-		cvs = new this._Canvas()
+		cvs = new @_Canvas()
 		cvs.height = el.naturalHeight
 		cvs.width = el.naturalWidth
 		ctx = cvs.getContext('2d')
 		ctx.clearRect(0, 0, cvs.width, cvs.height)
 		ctx.drawImage el, 0, 0
 		ctx.save
-		# $el.replaceWith(cvs)
+		if replaceWithCanvas
+			for attr in el.attributes
+				attrToSkip = ['alt', 'src']
+				if attr.name in attrToSkip
+					#do nothing
+				else
+					cvs.setAttribute attr.name, attr.value
+			$el.replaceWith(cvs)
+			@options.el[indexInOptions] = cvs
 		return cvs
 
 	###
-	@param $el querySelector
+	@param replaceWithImage boolean
 	@param el HTMLCanvasElement
+	@param $el querySelector
+	@return HTMLImageElement
 	###
-	imagify: ($el, el)->
-		# cvs = new this._Canvas()
-		# cvs.height = el.naturalHeight
-		# cvs.width = el.naturalWidth
+	imagify: (replaceWithImage, el, $el)->
 		imgtmp = new Image
 		imgtmp.src = el.toDataURL()
 		imgtmp.onload = =>
-			$el.replaceWith(imgtmp)
-		return imgtmp
-
-	# TODO: clear fn from unneccessary anonymous fn
-	blurry: (_this, imgtmp, sharpObj)->
-		# imgtmp.onload = ((_self, _this, options)=>
-			# console.log this, _self
-			cvstmp = new _this._Canvas()
-			cvsctx = cvstmp.getContext '2d'
-			cvstmp.height = imgtmp.naturalHeight
-			cvstmp.width = imgtmp.naturalWidth
-			cvsctx.clearRect 0, 0, cvstmp.width, cvstmp.height
+			if 	replaceWithImage
+				$el.replaceWith(imgtmp)
+			return imgtmp
+  ###
+  ###
+  dataToCanvas: (data)->
+		imgtmp = new Image
+		imgtmp.src = data
+		imgtmp.onload = =>
+			canvas = new @_Canvas()
+			canvas.height = imgtmp.naturalHeight
+			canvas.width = imgtmp.naturalWidth
+			cvsctx.clearRect 0, 0, canvas.width, canvas.height
 			cvsctx.drawImage imgtmp, 0, 0
-			cvsctx.save
-			cvstmp = new StackBlur.canvasRGBA cvstmp, 0, 0, cvstmp.width, cvstmp.height, 3
-			_this.blurryEl[sharpObj.sharpHash] = cvstmp.toDataURL()
-			console.log sharpObj.sharpData is _this.blurryEl[sharpObj.sharpHash]
-			# console.log cvstmp.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight) is _cvs.getContext('2d').getImageData(0, 0, _self.naturalWidth, _self.naturalHeight)
-		# )(imgtmp, _this, {sharpHash: sharpObj.sharpHash, sharpData: sharpObj.sharpData})
+			return canvas
+	###
+	###
+	canvasDataReplacement: (canvas, data)->
+		imgtmp = new Image
+		imgtmp.src = data
+		imgtmp.onload = =>
+			canvas.height = imgtmp.naturalHeight
+			canvas.width = imgtmp.naturalWidth
+			cvsctx = canvas.getContext('2d')
+			cvsctx.clearRect 0, 0, canvas.width, canvas.height
+			cvsctx.drawImage imgtmp, 0, 0
+			return canvas
 
 	imgToCanvas : (image)->
 		cvs = document.createElement('canvas')
@@ -107,7 +166,8 @@ class @Blurry
 		ctx.clearRect(0, 0, cvs.width, cvs.height)
 		ctx.drawImage el, 0, 0
 		ctx.save
-		$el.replaceWith(cvs)
+		return cvs
+		# $el.replaceWith(cvs)
 
 	###
 	Events
@@ -118,7 +178,7 @@ class @Blurry
 			do (el)=>
 				if @_type(el) is 'Image'
 					$(el).bind 'mouseover', {_this:this,el:el}, (event)->
-						# console.log event.data._this
+						# console.log event
 						data = event.data._this.blurryEl[event.data.el.dataset.blurryId]
 						event.data.el.src = data
 					$(el).bind 'mouseleave', {_this:this,el:el}, (event)->
@@ -126,6 +186,49 @@ class @Blurry
 						data = event.data._this.sharpEl[event.data.el.dataset.blurryId]
 						event.data.el.src = data
 
+				else if @_type(el) is 'Canvas'
+					console.log 'not ready for canvas'
+					$(el.parentNode).bind 'mouseover', {_this:this,el:el,parent:el.parentNode}, (e)->
+						$parent = $(e.data.parent).find(e.data.el.tagName.toLowerCase())
+						for el in $parent
+							a = e.data._this.canvasDataReplacement el, e.data._this.blurryEl[el.dataset.blurryId]
+							a()
+					$(el.parentNode).bind 'mouseout', {_this:this,el:el,parent:el.parentNode}, (e)->
+						$parent = $(e.data.parent).find(e.data.el.tagName.toLowerCase())
+						for el in $parent
+							a = e.data._this.canvasDataReplacement el, e.data._this.sharpEl[el.dataset.blurryId]
+							a()
+					# $(el).bind 'mousemove', {_this:this,el:el}, @_mouseover
+					# $(el).bind 'mousemove', {_this:this,el:el}, (event)->
+					# 	$(el).trigger 'active'
+					# 	# data = event.data._this.sharpEl[event.data.el.dataset.blurryId]
+					# 	# event.data.el.src = data
+				else
+					return
+
+	_mouseover: (e)->
+    if not e
+        e = window.event;
+    console.log e
+    console.log e.currentTarget.parentNode
+
+	_mouseactive: (e)->
+    if not e
+        e = window.event;
+    console.log e
+    mx = e.pageX
+    my = e.pageY
+    areaX = [e.currentTarget.offsetLeft, e.currentTarget.offsetLeft + e.currentTarget.offsetWidth]
+    areaY = [e.currentTarget.offsetTop, e.currentTarget.offsetTop + e.currentTarget.offsetHeight]
+    if areaX[1] >= mx >= areaX[0] and areaY[1] >= my >= areaY[0]
+    	console.log 'over'
+    console.log areaX
+    console.log mx
+
+  _mouseout: (_this)->
+    _this.mousePos = null
+    # if typeof canvasOnmouseout is typeof Function
+    #   canvasOnmouseout(_this)
 
 	###
 	Blur all elements in this.options.el, except the one passed as arg[0]
@@ -186,15 +289,22 @@ class @Blurry
 
 $ ->
 	$('body').waitForImages ()=>
-		window.blurFx = new Blurry {
-			# el: $('section.identity').find('h1 img')
-			el: $('canvas')
+		blurFx = new Blurry {
+			replaceWithCanvas: true
+			parent: $('section.identity')
+			el: $('section.identity').find('h1 img')
+			# el: $('canvas')
+			radius: 3
+			onComplete: (_this)->
+				console.log 'complete'
 		}
-		console.log blurFx, blurFx.options.el.length
+		console.log blurFx
+
+		for hash in blurFx.blurryEl
+			do (hash)->
+				console.log '__'+hash
+				console.log $('*[blurry-id="'+hash+'"]')
 		# for hash in blurFx.usedHashes
-		# for k, v of blurFx.blurryEl
-		# 	do =>
-		# 		console.log k + ':' + Object.prototype.toString.call(k), v + ':' + Object.prototype.toString.call(v)
 		# elI = 0
 		# for el in blurFx.options.el
 		# 	do (el)=>

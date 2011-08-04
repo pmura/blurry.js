@@ -3,45 +3,29 @@
 <head>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
     <meta content="en" http-equiv="content-language"/>
-    <title>pmworks - Always the Next Step</title>
+    <title>Blurry Live Test</title>
     <meta content="" name="description"/>
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="css/blur.php" type="text/css" rel="stylesheet" media="screen">
     <!--<script src="scripts/less.js" type="text/javascript"></script>-->
-    <script src="scripts/jshashtable.js"></script>
     <script src="scripts/jquery.js"></script>
     <script src="scripts/jquery.waitforimages.js"></script>
-    <!--<script src="scripts/raphael.js"></script>
-    <script src="scripts/morpheus.js"></script>-->
-    <script src="scripts/_stackblur.js"></script>
-<script type="text/coffeescript" src="scripts/blur.coffee"></script>
-<!-- <script type="text/coffeescript" src="scripts/arr.coffee"></script> -->
-<script src="scripts/coffee-script.js"></script>
-    <!--<script src="scripts/blur.js"></script>-->
-    <!--<script src="scripts/svgweb/svg.js" data-path="media/data/svg"></script>-->
+    <script src="scripts/stackblur.js"></script>
     <script src="scripts/cufon-yui.js" type="text/javascript"></script>
     <script src="scripts/fonts/MPR-full.font.js" type="text/javascript"></script>
-    
     <script type="text/javascript">
         Cufon.replace('.identity .description', 'MPR');
         Cufon.replace('#cufoned', 'MPR');
-
-// $(document).ready(function(){
-//     $('body').waitForImages(function(){
-//         this.blurFx = new Blurry({
-//             el: $('section.identity').find('h1 img')
-//         });
-//         console.log(this.blurFx);
-//     });
-// });
     </script>
-
+    <!-- Blurry -->
+    <script type="text/coffeescript" src="scripts/blurry.coffee"></script>
+    <script src="scripts/coffee-script.js"></script>
 </head>
 <body class="home">
 <style>
-    .blur {filter:url(css/blur.svg#blur);}
+    /*.blur {filter:url(css/blur.svg#blur);}*/
 </style>
 
     <div id="wrapper">
