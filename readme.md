@@ -1,18 +1,50 @@
-Blurry.js it's an experimental cross-html5-browser javascript library for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), and the StackBlur library for canvas blur.
+Blurry.js it's an experimental javascript library (written in [CoffeScript](http://jashkenas.github.com/coffee-script/)) for applying blur effects to HTML text and images. Blurry.js' dependencies include: an html to canvas replacement engine (by default it uses Cufon), a slighty modified version of the StackBlur library for canvas blur, jQuery and jQuery.waitForImages.
 
-Works best when using web workers.
+It is amasingly fast though we want to test it with web workers on bigger images.
 
-# How it works
-## Step 1
+**WARNING**: As of now, it shouldn't be used for other then experimenting with the code itself.
 
-Get all canvases and apply a unique id under \<\canvas data-blurry-id="ID" \/>
+Technicals
+==========
 
-## Step 2
+How it works
+------------
 
-For each canvas store hash
-{Blurry.sharpEl.ID = data/png}
-{Blurry.blurryEl.ID = data/png}
+1. Get all canvases and apply a unique id under \<\canvas data-blurry-id="ID" \/>
+2. For each canvas store hash
+        {Blurry.sharpEl.ID = data/png}
+        {Blurry.blurryEl.ID = data/png}
 
-# Browser Support
+Browser Support
+---------------
+
 Should work on all current HTML5 enabled browsers (IE9+, Firefox 5+, Chrome 10+, Opera 12+, Safari 5+). Tested on:
-- Chrome 14.0.814.0
+* Chrome 14.0.814.0
+* Firefox 5
+
+In the wild
+===========
+* Originally written for and implemented in the new [pmworks website](http://www.pmworks-corp.com)
+* Will be partially implemented in a major brand website
+
+Usage
+=====
+In CoffeeScript
+
+    $ ->
+      $('body').waitForImages ()=>
+        blurFx = new Blurry {
+          # replace HTMLImageObject with HTMLCanvasObject
+          # if only images it is not required
+          replaceWithCanvas: true
+
+          # Element(s) to apply the blur
+          el: $('section').find('img')
+
+          # gaussian blur radius
+          radius: 3
+
+          # after Blurry completes, it calls this method
+          onComplete: (_this)->
+            console.log 'complete'
+        }
