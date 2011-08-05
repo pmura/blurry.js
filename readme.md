@@ -12,9 +12,24 @@ How it works
 
 1. Get all canvases and apply a unique id under \<\canvas data-blurry-id="ID" \/>
 2. For each canvas store hash
+
         {Blurry.sharpEl.ID = data/png}
 
+3. For each stored hash, data in Blurry.sharpEl
+
+<pre>
+  create tempImage
+  load tempImage src with data/png from Blurry.sharpEl.ID
+  apply blur
+</pre>
+
+3.1 Store the blur data
+
         {Blurry.blurryEl.ID = data/png}
+
+4. For each hash, delegate events (mouseover, mouseout)
+
+4.1 If is canvas, apply event on parent tag (which is HTML). Canvas elements don't support blur.
 
 Browser Support
 ---------------
