@@ -1,3 +1,24 @@
+/*
+Copyright (C) 2011 by Pasion Mura <pmura@pmura.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __indexOf = Array.prototype.indexOf || function(item) {
   for (var i = 0, l = this.length; i < l; i++) {
     if (this[i] === item) return i;
@@ -76,18 +97,18 @@ this.Blurry = (function() {
     return this;
   }
   /*
-  	Element manipulation funs
-  	-------------------------
-  	*/
+    Element manipulation funs
+    -------------------------
+    */
   /*
-  	@param replaceWithCanvas querySelector
-  	@param indexInOptions querySelector
-  	@param $el querySelector
-  	@param el querySelector
-  	@param w int
-  	@param h int
-  	@return HTMLImageElement
-  	*/
+    @param replaceWithCanvas querySelector
+    @param indexInOptions querySelector
+    @param $el querySelector
+    @param el querySelector
+    @param w int
+    @param h int
+    @return HTMLImageElement
+    */
   Blurry.prototype.canvasify = function(replaceWithCanvas, indexInOptions, $el, el, w, h) {
     var attr, attrToSkip, ctx, cvs, _i, _len, _ref, _ref2;
     cvs = new this._Canvas();
@@ -112,26 +133,26 @@ this.Blurry = (function() {
     return cvs;
   };
   /*
-  	@param replaceWithImage boolean
-  	@param el HTMLCanvasElement
-  	@param $el querySelector
-  	@return HTMLImageElement
-  	*/
+    @param replaceWithImage boolean
+    @param el HTMLCanvasElement
+    @param $el querySelector
+    @return HTMLImageElement
+    */
   Blurry.prototype.imagify = function(replaceWithImage, el, $el) {
     var imgtmp;
     imgtmp = new Image;
     imgtmp.src = el.toDataURL();
-    imgtmp.onload = __bind(function() {
+    return imgtmp.onload = __bind(function() {
       if (replaceWithImage) {
         $el.replaceWith(imgtmp);
       }
       return imgtmp;
     }, this);
-    ({
-      /*
-        */
-      dataToCanvas: function(data) {}
-    });
+  };
+  /*
+    */
+  Blurry.prototype.dataToCanvas = function(data) {
+    var imgtmp;
     imgtmp = new Image;
     imgtmp.src = data;
     return imgtmp.onload = __bind(function() {
@@ -145,7 +166,7 @@ this.Blurry = (function() {
     }, this);
   };
   /*
-  	*/
+    */
   Blurry.prototype.canvasDataReplacement = function(canvas, data) {
     var imgtmp;
     imgtmp = new Image;
@@ -172,9 +193,9 @@ this.Blurry = (function() {
     return cvs;
   };
   /*
-  	Events
-  	------
-  	*/
+    Events
+    ------
+    */
   Blurry.prototype.events = function() {
     var el, _i, _len, _ref, _results;
     _ref = this.options.el;
@@ -238,38 +259,15 @@ this.Blurry = (function() {
     }
     return _results;
   };
-  Blurry.prototype._mouseover = function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    console.log(e);
-    return console.log(e.currentTarget.parentNode);
-  };
-  Blurry.prototype._mouseactive = function(e) {
-    var areaX, areaY, mx, my;
-    if (!e) {
-      e = window.event;
-    }
-    console.log(e);
-    mx = e.pageX;
-    my = e.pageY;
-    areaX = [e.currentTarget.offsetLeft, e.currentTarget.offsetLeft + e.currentTarget.offsetWidth];
-    areaY = [e.currentTarget.offsetTop, e.currentTarget.offsetTop + e.currentTarget.offsetHeight];
-    if ((areaX[1] >= mx && mx >= areaX[0]) && (areaY[1] >= my && my >= areaY[0])) {
-      console.log('over');
-    }
-    console.log(areaX);
-    return console.log(mx);
-  };
-  Blurry.prototype._mouseout = function(_this) {
-    return _this.mousePos = null;
-  };
+  Blurry.prototype._mouseover = function(e) {};
+  Blurry.prototype._mouseactive = function(e) {};
+  Blurry.prototype._mouseout = function(_this) {};
   /*
-  	Blur all elements in this.options.el, except the one passed as arg[0]
-  	@param except querySelector
-  	@return true if replaced elements; false if none replaced, error if except not
-  					found
-  	*/
+    Blur all elements in this.options.el, except the one passed as arg[0]
+    @param except querySelector
+    @return true if replaced elements; false if none replaced, error if except not
+            found
+    */
   Blurry.prototype.blurAllExcept = function(except) {
     var el, _i, _len, _ref, _results;
     _ref = this.options.el;
@@ -287,11 +285,11 @@ this.Blurry = (function() {
     return _results;
   };
   /*
-  	Sharp all elements in this.options.el, except the one passed as arg[0]
-  	@param except querySelector
-  	@return true if replaced elements; false if none replaced, error if except not
-  					found
-  	*/
+    Sharp all elements in this.options.el, except the one passed as arg[0]
+    @param except querySelector
+    @return true if replaced elements; false if none replaced, error if except not
+            found
+    */
   Blurry.prototype.sharpAllExcept = function(except) {};
   Blurry.prototype.hash = function() {
     var hash;
@@ -343,7 +341,7 @@ this.Blurry = (function() {
 })();
 $(function() {
   return $('body').waitForImages(__bind(function() {
-    var blurFx, hash, _i, _len, _ref, _results;
+    var blurFx;
     blurFx = new Blurry({
       replaceWithCanvas: true,
       parent: $('section.identity'),
@@ -353,16 +351,6 @@ $(function() {
         return console.log('complete');
       }
     });
-    console.log(blurFx);
-    _ref = blurFx.blurryEl;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      hash = _ref[_i];
-      _results.push((function(hash) {
-        console.log('__' + hash);
-        return console.log($('*[blurry-id="' + hash + '"]'));
-      })(hash));
-    }
-    return _results;
+    return console.log(blurFx);
   }, this));
 });
